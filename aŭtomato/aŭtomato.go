@@ -59,7 +59,7 @@ var transiroj = map[Stato]map[LiteroTipo]Stato{
 		konsonanto1: k1,
 		konsonanto2: k2,
 		konsonanto3: k3,
-		fino: k3,
+		fino:        k3,
 		vokalo:      v,
 	},
 }
@@ -70,17 +70,20 @@ var finajStatoj = map[Stato]struct{}{
 }
 
 type FiniaAŭtomato struct {
-	stato Stato
+	stato        Stato
+	antaŭeFinita bool
 }
 
 func Krei() FiniaAŭtomato {
 	return FiniaAŭtomato{
-		stato: malplena,
+		stato:        malplena,
+		antaŭeFinita: false,
 	}
 }
 
 func (fa *FiniaAŭtomato) Restartigi() {
 	fa.stato = malplena
+	fa.antaŭeFinita = false
 }
 
 func (fa *FiniaAŭtomato) Movi(novaLitero rune) error {
@@ -94,6 +97,55 @@ func (fa *FiniaAŭtomato) Movi(novaLitero rune) error {
 		}
 	}
 	return errors.New(fmt.Sprintf("Nevalida sekva litero: %v", string(novaLitero)))
+}
+
+func (fa *FiniaAŭtomato) Dividi(vorto string) ([]string, error) {
+	defer fa.Restartigi()
+
+	silaboj := make([]string, 0, 3)
+	literoj := []rune(vorto)
+	var aktualaSilabo strings.Builder
+	for i, litero := range literoj {
+		err := fa.Movi(litero)
+		if err != nil {
+			return []string{}, err
+		}
+		if fa.ĈuFinita() {
+			if fa.antaŭeFinita {
+				if i < len(literoj)-1 && ĈuVokalaLitero(literoj[i+1]) {
+					silaboj = append(silaboj, aktualaSilabo.String())
+					aktualaSilabo.Reset()
+					aktualaSilabo.WriteRune(litero)
+				} else {
+					aktualaSilabo.WriteRune(litero)
+					silaboj = append(silaboj, aktualaSilabo.String())
+					aktualaSilabo.Reset()
+				}
+			} else {
+				aktualaSilabo.WriteRune(litero)
+			}
+			fa.antaŭeFinita = true
+		} else {
+			if fa.antaŭeFinita && aktualaSilabo.Len() > 0 {
+				silaboj = append(silaboj, aktualaSilabo.String())
+				aktualaSilabo.Reset()
+			}
+			aktualaSilabo.WriteRune(litero)
+			fa.antaŭeFinita = false
+		}
+	}
+
+	if fa.ĈuFinita() {
+		if aktualaSilabo.Len() > 0 {
+			silaboj = append(silaboj, aktualaSilabo.String())
+		}
+		if len(silaboj) > 3 {
+			return []string{}, errors.New(fmt.Sprintf("Tro da silaboj en %v", vorto))
+		}
+		return silaboj, nil
+	} else {
+		return []string{}, errors.New("Ne finita")
+	}
 }
 
 func (fa *FiniaAŭtomato) ĈuFinita() bool {
