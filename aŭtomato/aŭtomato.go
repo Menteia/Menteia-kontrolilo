@@ -59,6 +59,7 @@ var transiroj = map[Stato]map[LiteroTipo]Stato{
 		konsonanto1: k1,
 		konsonanto2: k2,
 		konsonanto3: k3,
+		fino: k3,
 		vokalo:      v,
 	},
 }
@@ -92,7 +93,7 @@ func (fa *FiniaAŭtomato) Movi(novaLitero rune) error {
 			return nil
 		}
 	}
-	return errors.New(fmt.Sprintf("Nevalida sekva litero: %v", novaLitero))
+	return errors.New(fmt.Sprintf("Nevalida sekva litero: %v", string(novaLitero)))
 }
 
 func (fa *FiniaAŭtomato) ĈuFinita() bool {

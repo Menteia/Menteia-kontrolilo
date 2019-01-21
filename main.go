@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"errors"
 	"github.com/aws/aws-lambda-go/lambda"
 	"menteia/kontrolilo"
 )
@@ -19,8 +18,12 @@ type Respondo struct {
 func Funkcio(ctx context.Context, peto Peto) (Respondo, error) {
 	kialo := kontrolilo.KontroliVorton(peto.Vorto)
 	if kialo == nil {
-		return Respondo{ĈuValida: true, Kialo: ""}
+		return Respondo{ĈuValida: true, Kialo: ""}, nil
 	} else {
-		return Respondo{ĈuValida: false, Kialo: kialo}
+		return Respondo{ĈuValida: false, Kialo: kialo.Error()}, nil
 	}
+}
+
+func main() {
+  lambda.Start(Funkcio)
 }
