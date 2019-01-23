@@ -38,21 +38,21 @@ func TestIPA(t *testing.T) {
 		t.Errorf("Malprava IPA: atendita %v, ricevis %v", prava, rezulto[0])
 	}
 
-	testo2 := "sagi to darena ʃona siri fora"
+	testo2 := "sagi to gemuna ʃona siri fora"
 	prava2 := []string{
 		"sagi",
 		"to",
-		"də'reɪnə",
+		"ge'munə",
 		"ʃonə",
 		"siri",
 		"forə",
 	}
 	rezulto2, err2 := IgiIPA(testo2)
 	if err2 != nil {
-		t.Errorf("Malatendita eraro de %v: %v", testo2, err.Error())
+		t.Errorf("Malatendita eraro de %v: %v", testo2, err2.Error())
 	}
 	if len(rezulto2) != len(prava2) {
-		t.Errorf("Malprava kvanto da vortoj: atendita %v, ricevis %v", len(prava2), len(rezulto))
+		t.Errorf("Malprava kvanto da vortoj: atendita %v, ricevis %v", len(prava2), len(rezulto2))
 	}
 	for i, vorto := range prava2 {
 		if vorto != rezulto2[i] {

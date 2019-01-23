@@ -111,7 +111,7 @@ func (fa *FiniaAŭtomato) Dividi(vorto string) ([]string, error) {
 			return []string{}, err
 		}
 		if fa.ĈuFinita() {
-			if fa.antaŭeFinita {
+			if fa.antaŭeFinita && aktualaSilabo.Len() > 0 {
 				if i < len(literoj)-1 && ĈuVokalaLitero(literoj[i+1]) {
 					silaboj = append(silaboj, aktualaSilabo.String())
 					aktualaSilabo.Reset()
