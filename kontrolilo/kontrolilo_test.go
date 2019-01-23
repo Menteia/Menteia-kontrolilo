@@ -25,17 +25,10 @@ func TestNevalidajVortoj(t *testing.T) {
 }
 
 func TestIPA(t *testing.T) {
-	testo1 := "marika"
-	prava := "mə'rikə"
-	rezulto, err := IgiIPA(testo1)
-	if err != nil {
-		t.Errorf("Malatendita eraro de marika: %v", err.Error())
-	}
-	if len(rezulto) != 1 {
-		t.Errorf("Malprava kvanto da vortoj: atendita 1, ricevis %v", len(rezulto))
-	}
-	if rezulto[0] != prava {
-		t.Errorf("Malprava IPA: atendita %v, ricevis %v", prava, rezulto[0])
+	testoj := []string{"marika", "fidinas"}
+	pravaj := []string{"mə'rikə", "fi'dinəs"}
+	for i, testo := range testoj {
+		testVorton(testo, pravaj[i], t)
 	}
 
 	testo2 := "sagi to gemuna ʃona siri fora"
@@ -58,5 +51,18 @@ func TestIPA(t *testing.T) {
 		if vorto != rezulto2[i] {
 			t.Errorf("Malprava vorto: atendita %v, ricevis %v", vorto, rezulto2[i])
 		}
+	}
+}
+
+func testVorton(vorto string, prava string, t *testing.T) {
+	rezulto, err := IgiIPA(vorto)
+	if err != nil {
+		t.Errorf("Malatendita eraro de marika: %v", err.Error())
+	}
+	if len(rezulto) != 1 {
+		t.Errorf("Malprava kvanto da vortoj: atendita 1, ricevis %v", len(rezulto))
+	}
+	if rezulto[0] != prava {
+		t.Errorf("Malprava IPA: atendita %v, ricevis %v", prava, rezulto[0])
 	}
 }

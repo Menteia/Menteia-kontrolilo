@@ -71,19 +71,19 @@ var finajStatoj = map[Stato]struct{}{
 
 type FiniaAŭtomato struct {
 	stato        Stato
-	antaŭeFinita bool
+	lastaLitero rune
 }
 
 func Krei() FiniaAŭtomato {
 	return FiniaAŭtomato{
 		stato:        malplena,
-		antaŭeFinita: false,
+		lastaLitero: '_',
 	}
 }
 
 func (fa *FiniaAŭtomato) Restartigi() {
 	fa.stato = malplena
-	fa.antaŭeFinita = false
+	fa.lastaLitero = '_'
 }
 
 func (fa *FiniaAŭtomato) Movi(novaLitero rune) error {
@@ -111,7 +111,7 @@ func (fa *FiniaAŭtomato) Dividi(vorto string) ([]string, error) {
 			return []string{}, err
 		}
 		if fa.ĈuFinita() {
-			if fa.antaŭeFinita && aktualaSilabo.Len() > 0 {
+			if ĈuVokalaLitero(fa.lastaLitero) {
 				if i < len(literoj)-1 && ĈuVokalaLitero(literoj[i+1]) {
 					silaboj = append(silaboj, aktualaSilabo.String())
 					aktualaSilabo.Reset()
@@ -124,15 +124,14 @@ func (fa *FiniaAŭtomato) Dividi(vorto string) ([]string, error) {
 			} else {
 				aktualaSilabo.WriteRune(litero)
 			}
-			fa.antaŭeFinita = true
 		} else {
-			if fa.antaŭeFinita && aktualaSilabo.Len() > 0 {
+			if ĈuVokalaLitero(fa.lastaLitero) && aktualaSilabo.Len() > 0 {
 				silaboj = append(silaboj, aktualaSilabo.String())
 				aktualaSilabo.Reset()
 			}
 			aktualaSilabo.WriteRune(litero)
-			fa.antaŭeFinita = false
 		}
+		fa.lastaLitero = litero
 	}
 
 	if fa.ĈuFinita() {
@@ -140,6 +139,7 @@ func (fa *FiniaAŭtomato) Dividi(vorto string) ([]string, error) {
 			silaboj = append(silaboj, aktualaSilabo.String())
 		}
 		if len(silaboj) > 3 {
+			fmt.Printf("%v\n", silaboj)
 			return []string{}, errors.New(fmt.Sprintf("Tro da silaboj en %v", vorto))
 		}
 		return silaboj, nil
