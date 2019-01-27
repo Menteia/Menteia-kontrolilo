@@ -38,12 +38,12 @@ func IgiIPA(eniro string) ([]string, error) {
 		case 1:
 			ipa = silaboj[0]
 		case 2:
-			ipa = fmt.Sprintf("%v%v", silaboj[0], strings.Replace(silaboj[1], "a", "ə", 1))
+			ipa = fmt.Sprintf("'%v%v", silaboj[0], strings.Replace(silaboj[1], "a", "ə", 1))
 		case 3:
 			ipa = fmt.Sprintf(
 				"%v'%v%v",
 				strings.Replace(silaboj[0], "a", "ə", 1),
-				strings.Replace(silaboj[1], "e", "eɪ", 1),
+				silaboj[1],
 				strings.Replace(silaboj[2], "a", "ə", 1),
 			)
 		}

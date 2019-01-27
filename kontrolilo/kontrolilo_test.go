@@ -33,12 +33,12 @@ func TestIPA(t *testing.T) {
 
 	testo2 := "sagi to gemuna ʃona siri fora"
 	prava2 := []string{
-		"sagi",
+		"'sagi",
 		"to",
 		"ge'munə",
-		"ʃonə",
-		"siri",
-		"forə",
+		"'ʃonə",
+		"'siri",
+		"'forə",
 	}
 	rezulto2, err2 := IgiIPA(testo2)
 	if err2 != nil {
